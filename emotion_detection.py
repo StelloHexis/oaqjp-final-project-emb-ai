@@ -2,10 +2,24 @@ import requests
 import json
 
 def emotion_detector(text_to_analyze):
-    url = (
+    response = requests.post(
+        url = (
         "https://sn-watson-emotion.labs.skills.network/"
-        "v1/watson.runtime.nlp.v1/NlpService/EmotionPredict"
+        "v1/watson.runtime.nlp.v1/NlpService/EmotionPredict"),
+        json={"rawDocument": {"text": text_to_analyze}},
+        headers={"content-type": "application/json"}
     )
+
+    if response.status_code == 400:
+        return {
+            "anger": None,
+            "disgust": None,
+            "fear": None,
+            "joy": None,
+            "sadness": None,
+            "dominant_emotion": None
+        }
+    
 
     headers = {
         "grpc-metadata-mm-model-id": "emotion_aggregated-workflow_lang_en_stock"
